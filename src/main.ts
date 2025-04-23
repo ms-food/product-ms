@@ -1,14 +1,14 @@
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
+import { Transport } from '@nestjs/microservices';
 import { AppModule } from './app.module';
 import { envs } from './config';
 
 async function bootstrap() {
   const app = await NestFactory.createMicroservice(AppModule, {
-    transport: 'TCP',
+    transport: Transport.NATS,
     options: {
-      host: '127.0.0.1',
-      port: envs.port,
+      servers: envs.natsServers,
     },
   });
 
@@ -23,7 +23,7 @@ async function bootstrap() {
     }),
   );
 
-  //await app.listen(envs.port);
+  await app.listen();
 
   //logger.log(`App running on port ${envs.port} 🚀`);
 
